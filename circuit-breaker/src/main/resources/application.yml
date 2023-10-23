@@ -1,0 +1,50 @@
+server:
+  port: 8082
+
+# Hystrix Configuration
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          semaphore:
+            maxConcurrentRequests: 200
+          thread:
+            timeoutInMilliseconds: 30000
+      fallback:
+        isolation:
+          semaphore:
+            maxConcurrentRequests: 200
+        enabled: true
+      circuitBreaker:
+        enabled: false
+    hello:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
+      fallback:
+        isolation:
+          semaphore:
+            maxConcurrentRequests: 200
+        enabled: true
+      circuitBreaker:
+        enabled: true
+        requestVolumeThreshold: 10
+        sleepWindowInMilliseconds: 1000
+        errorThresholdPercentage: 50
+  threadpool:
+    default:
+      coreSize: 10
+      maxQueueSize: 100
+      queueSizeRejectionThreshold: 100
+      allowMaximumSizeToDivergeFromCoreSize: true
+      keepAliveTimeMinutes: 2
+    hello_tp:
+      coreSize: 10
+      maxQueueSize: 100
+      queueSizeRejectionThreshold: 100
+      allowMaximumSizeToDivergeFromCoreSize: true
+      keepAliveTimeMinutes: 2
+

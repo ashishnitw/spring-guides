@@ -1,0 +1,28 @@
+spring:
+  # Datasource and HikariCP configuration
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?useSSL=false
+    username: root
+    password: ""
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 10000
+      idle-timeout: 20000
+      max-lifetime: 1500000
+      maximumPoolSize: 10
+      minimum-idle: 1
+      pool-name: MySpringBootJPAHikariCP
+  # Jackson configuration
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+    deserialization:
+      fail-on-unknown-properties: false
+  # JPA and Hibernate configuration
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: on

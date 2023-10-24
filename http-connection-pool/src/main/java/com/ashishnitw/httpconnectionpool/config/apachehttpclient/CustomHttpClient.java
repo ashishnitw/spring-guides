@@ -1,5 +1,6 @@
-package com.ashishnitw.httpconnectionpool.config.option1;
+package com.ashishnitw.httpconnectionpool.config.apachehttpclient;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
@@ -13,6 +14,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,33 +28,24 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Configuration
 @EnableScheduling
-public class HttpClientConfig {
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
+public class CustomHttpClient {
 
     @Value("${server.port}")
     private Integer port;
 
-    private static final int DEFAULT_KEEP_ALIVE_TIME = 20 * 1000; // 20 seconds // Keep alive time
-    private static final int IDLE_CONNECTION_WAIT_TIME = 20 * 1000; // 20 seconds // Idle connection monitor thread
-
-    // Timeouts
-    private static final int CONNECT_TIMEOUT = 30 * 1000; // 30 sec, the time for waiting until a connection is established
-    private static final int REQUEST_TIMEOUT = 30 * 1000; // 30 sec, the time for waiting for a connection from connection pool
-    private static final int SOCKET_TIMEOUT = 60 * 1000; // 60 sec, the time for waiting for data
-
-    // Connection pool
-    private static final int MAX_ROUTE_CONNECTIONS = 3; // max number of connections for a single route
-    private static final int MAX_TOTAL_CONNECTIONS = 4; // max number of connections for all routes
-    private static final int MAX_LOCALHOST_CONNECTIONS = 4; // max number of connections for localhost
+    private final HttpClientConfigs httpClientConfigs;
+    private static final int MAX_LOCALHOST_CONNECTIONS = 4;
 
     @Bean
     public PoolingHttpClientConnectionManager poolingHttpClientConnectionManager() {
         PoolingHttpClientConnectionManager poolingConnectionManager = new PoolingHttpClientConnectionManager();
 
         // set total amount of connections across all HTTP routes
-        poolingConnectionManager.setMaxTotal(MAX_TOTAL_CONNECTIONS);
+        poolingConnectionManager.setMaxTotal(httpClientConfigs.getMaxTotalConnections());
 
         // set maximum amount of connections for each http route in pool
-        poolingConnectionManager.setDefaultMaxPerRoute(MAX_ROUTE_CONNECTIONS);
+        poolingConnectionManager.setDefaultMaxPerRoute(httpClientConfigs.getDefaultMaxPerRouteConnections());
 
         // increase the amounts of connections if host is localhost
         HttpHost localhost = new HttpHost("http://localhost", port);
@@ -79,7 +72,7 @@ public class HttpClientConfig {
                     return Long.parseLong(value) * 1000; // convert to ms
                 }
             }
-            return DEFAULT_KEEP_ALIVE_TIME;
+            return httpClientConfigs.getDefaultKeepAliveTime();
         };
     }
 
@@ -95,7 +88,7 @@ public class HttpClientConfig {
                 // only if connection pool is initialised
                 if (pool != null) {
                     pool.closeExpiredConnections();
-                    pool.closeIdleConnections(IDLE_CONNECTION_WAIT_TIME, TimeUnit.MILLISECONDS);
+                    pool.closeIdleConnections(httpClientConfigs.getIdleConnectionWaitTime(), TimeUnit.MILLISECONDS);
                     log.info("Idle connection monitor: Closing expired and idle connections");
                 }
             }
@@ -113,9 +106,9 @@ public class HttpClientConfig {
     @Bean
     public CloseableHttpClient httpClient() {
         RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(CONNECT_TIMEOUT) // Maximum time that is waited for a connection to be established.
-                .setConnectionRequestTimeout(REQUEST_TIMEOUT) // Maximum time that is waited until a connection from the connection pool is available.
-                .setSocketTimeout(SOCKET_TIMEOUT) // Maximum time that is waited until data is received when a connection is established.
+                .setConnectTimeout(httpClientConfigs.getConnectTimeout()) // Maximum time that is waited for a connection to be established.
+                .setConnectionRequestTimeout(httpClientConfigs.getRequestTimeout()) // Maximum time that is waited until a connection from the connection pool is available.
+                .setSocketTimeout(httpClientConfigs.getSocketTimeout()) // Maximum time that is waited until data is received when a connection is established.
                 .build();
         return HttpClients.custom()
                 .setDefaultRequestConfig(requestConfig)

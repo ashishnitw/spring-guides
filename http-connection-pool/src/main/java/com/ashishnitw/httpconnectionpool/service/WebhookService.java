@@ -3,6 +3,9 @@ package com.ashishnitw.httpconnectionpool.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,5 +44,11 @@ public class WebhookService {
         restTemplate.postForEntity(WEBHOOK_URL, request, Object.class);
         long end = System.currentTimeMillis();
         log.info("time taken = " + (end - start) + " ms");
+    }
+
+    private HttpHeaders getHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        return headers;
     }
 }

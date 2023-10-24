@@ -1,4 +1,4 @@
-package com.ashishnitw.httpconnectionpool.config.option1;
+package com.ashishnitw.httpconnectionpool.config.apachehttpclient;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

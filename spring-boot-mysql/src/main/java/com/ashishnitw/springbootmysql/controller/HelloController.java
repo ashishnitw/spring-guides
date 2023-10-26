@@ -1,6 +1,5 @@
 package com.ashishnitw.springbootmysql.controller;
 
-import com.ashishnitw.springbootmysql.service.HelloService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class HelloController {
 
-    private final HelloService helloService;
-
     @GetMapping("/hello")
     ResponseEntity<Object> hello() {
-        return ResponseEntity.ok(helloService.hello());
+        return ResponseEntity.ok("Hello");
     }
 }

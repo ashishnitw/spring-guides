@@ -10,8 +10,34 @@ spring:
       connection-timeout: 10000
       idle-timeout: 20000
       max-lifetime: 1500000
-      maximumPoolSize: 10
-      minimum-idle: 1
+      maximumPoolSize: 20
+      minimum-idle: 2
+      pool-name: MySpringBootJPAHikariCP
+  datasource-read:
+    url: jdbc:mysql://localhost:3306/test?useSSL=false
+    username: root
+    password: ""
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 10000
+      idle-timeout: 20000
+      max-lifetime: 1500000
+      maximumPoolSize: 20
+      minimum-idle: 2
+      pool-name: MySpringBootJPAHikariCP
+  datasource-write:
+    url: jdbc:mysql://localhost:3306/test?useSSL=false
+    username: root
+    password: ""
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 10000
+      idle-timeout: 20000
+      max-lifetime: 1500000
+      maximumPoolSize: 20
+      minimum-idle: 2
       pool-name: MySpringBootJPAHikariCP
   # Jackson configuration
   jackson:

@@ -38,20 +38,20 @@ public class CustomHttpClient {
     private static final int MAX_LOCALHOST_CONNECTIONS = 4;
 
     @Bean
-    public PoolingHttpClientConnectionManager poolingHttpClientConnectionManager() {
-        PoolingHttpClientConnectionManager poolingConnectionManager = new PoolingHttpClientConnectionManager();
+    public PoolingHttpClientConnectionManager connectionManager() {
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
 
         // set total amount of connections across all HTTP routes
-        poolingConnectionManager.setMaxTotal(httpClientConfigs.getMaxTotalConnections());
+        connectionManager.setMaxTotal(httpClientConfigs.getMaxTotalConnections());
 
         // set maximum amount of connections for each http route in pool
-        poolingConnectionManager.setDefaultMaxPerRoute(httpClientConfigs.getDefaultMaxPerRouteConnections());
+        connectionManager.setDefaultMaxPerRoute(httpClientConfigs.getDefaultMaxPerRouteConnections());
 
         // increase the amounts of connections if host is localhost
         HttpHost localhost = new HttpHost("http://localhost", port);
-        poolingConnectionManager.setMaxPerRoute(new HttpRoute(localhost), MAX_LOCALHOST_CONNECTIONS);
+        connectionManager.setMaxPerRoute(new HttpRoute(localhost), MAX_LOCALHOST_CONNECTIONS);
 
-        return poolingConnectionManager;
+        return connectionManager;
     }
 
     /**
@@ -112,7 +112,7 @@ public class CustomHttpClient {
                 .build();
         return HttpClients.custom()
                 .setDefaultRequestConfig(requestConfig)
-                .setConnectionManager(poolingHttpClientConnectionManager())
+                .setConnectionManager(connectionManager())
                 .setKeepAliveStrategy(connectionKeepAliveStrategy())
                 .build();
     }

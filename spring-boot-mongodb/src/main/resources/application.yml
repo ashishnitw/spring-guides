@@ -1,0 +1,12 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: spring-boot-mongodb
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/spring-boot-mongodb
+  jackson:
+    default-property-inclusion: non_null
+    property-naming-strategy: SNAKE_CASE

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -13,10 +14,21 @@ import org.springframework.stereotype.Component;
 public class ConfigPrinter implements CommandLineRunner {
 
     private final HikariConfig hikariConfig;
+    private final DataSourceProperties dataSourceProperties;
 
     @Override
     public void run(String... args) {
         printHikariConfig();
+        printDataSourceConfig();
+    }
+
+    private void printDataSourceConfig() {
+        log.info("======================================");
+        log.info("DataSource Configuration : " + dataSourceProperties.getName());
+        log.info("\t JDBC URL: " + dataSourceProperties.getUrl());
+        log.info("\t Username: " + dataSourceProperties.getUsername());
+        log.info("\t Password: " + dataSourceProperties.getPassword());
+        log.info("======================================");
     }
 
     private void printHikariConfig() {

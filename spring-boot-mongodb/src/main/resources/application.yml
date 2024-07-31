@@ -7,6 +7,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/spring-boot-mongodb
+      field-naming-strategy: org.springframework.data.mapping.model.SnakeCaseFieldNamingStrategy
   jackson:
     default-property-inclusion: non_null
     property-naming-strategy: SNAKE_CASE

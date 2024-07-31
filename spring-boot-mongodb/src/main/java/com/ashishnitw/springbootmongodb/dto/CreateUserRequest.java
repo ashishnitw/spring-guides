@@ -11,4 +11,5 @@ public class CreateUserRequest {
     private String name;
     private String email;
     private List<String> roles;
+    private String phoneNumber;
 }
